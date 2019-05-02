@@ -1,9 +1,13 @@
 import numpy
 import os
+import math
 
 # nvariables = input("Ingrese el numero de variables -> ")
 
-def comprobar(resultados, nvariables):
+def comprobar(resultados, nvariables, condicion):
+
+    if condicion and condicion[-1] <= 0:
+        return True
     c = 0
     limit = len(resultados)
     for i in range(nvariables):
@@ -30,8 +34,8 @@ if __name__ == "__main__":
     resultados.append(resultado)
 
     niteracion = 0
+    condicion = []
     while True:
-        iteracion = []
         resultado = []
         for f in range(nvariables):
             result = 0
@@ -45,10 +49,17 @@ if __name__ == "__main__":
         resultados.append(resultado)
 
         niteracion += 1
-        if comprobar(resultados, nvariables): break
+        if niteracion >= 2:
+            operacion = 0
+            for a in range(nvariables):
+                if niteracion <= 2:
+                    operacion += round((resultados[niteracion-2][a] - 0)**2, 4)
+                else:
+                    operacion += round((resultados[niteracion-2][a] - resultados[niteracion-3][a])**2, 4)
+            condicion.append(round(math.sqrt(operacion), 4))
 
+        if comprobar(resultados, nvariables, condicion): break
 
-    c = 0
-    for r in resultados:
-        c += 1
-        print(c, r)
+    for n in range(len(condicion)):
+        print("k=",n+1, resultados[n], "  E=",condicion[n])
+        pass
